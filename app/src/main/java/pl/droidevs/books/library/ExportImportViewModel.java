@@ -6,6 +6,11 @@ import android.arch.lifecycle.ViewModel;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 
+import com.opencsv.CSVWriter;
+import com.opencsv.bean.ColumnPositionMappingStrategy;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -68,10 +73,21 @@ public class ExportImportViewModel extends ViewModel {
 
         try {
             FileWriter fileWriter = new FileWriter(file.getAbsoluteFile());
-            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-            bufferedWriter.write(CSVHelper.getCSVContentFromBooksList(books));
-            bufferedWriter.close();
-        } catch (IOException e) {
+            CSVWriter csvWriter = new CSVWriter(fileWriter);
+
+            ColumnPositionMappingStrategy strategy = new ColumnPositionMappingStrategy();
+            strategy.setType(Book.class);
+            String[] memberFieldsToBindTo = {"title", "author", "category", "description", "imageUrl"};
+            strategy.setColumnMapping(memberFieldsToBindTo);
+
+            StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder(fileWriter)
+                    .build();
+
+            beanToCsv.write(books);
+//            BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+//            bufferedWriter.write(CSVHelper.getCSVContentFromBooksList(books));
+//            bufferedWriter.close();
+        } catch (Exception e) {
 
         }
     }
