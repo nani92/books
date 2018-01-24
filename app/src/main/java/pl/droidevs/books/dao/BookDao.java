@@ -8,6 +8,8 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 import android.support.annotation.NonNull;
 
+import org.supercsv.cellprocessor.constraint.Unique;
+
 import java.util.List;
 
 import pl.droidevs.books.entity.BookEntity;
@@ -20,6 +22,9 @@ public interface BookDao {
     @Query("SELECT * FROM " + BookEntity.TABLE_NAME)
     LiveData<List<BookEntity>> getAllBooks();
 
+    @Query("SELECT * FROM " + BookEntity.TABLE_NAME + " WHERE id = :bookId LIMIT 1")
+    LiveData<List<BookEntity>> getBookById(int bookId);
+
     @Insert(onConflict = REPLACE)
     void addBook(@NonNull BookEntity book);
 
@@ -28,7 +33,4 @@ public interface BookDao {
 
     @Update(onConflict = REPLACE)
     void updateBook(@NonNull BookEntity book);
-
-    @Query("SELECT * FROM " + BookEntity.TABLE_NAME + " WHERE id = :bookId")
-    LiveData<BookEntity> getBookById(int bookId);
 }

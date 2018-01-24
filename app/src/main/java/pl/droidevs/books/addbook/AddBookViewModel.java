@@ -1,5 +1,4 @@
-package pl.droidevs.books.savebook;
-
+package pl.droidevs.books.addbook;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -12,13 +11,12 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import pl.droidevs.books.model.Book;
-import pl.droidevs.books.model.BookId;
 import pl.droidevs.books.repository.BookRepository;
 import pl.droidevs.books.validators.BookInputValidator;
 
-public class SaveBookViewModel extends ViewModel {
+public final class AddBookViewModel extends ViewModel {
 
-    private BookId bookId;
+    private final BookRepository bookRepository;
 
     private String imageUrl;
     private String title;
@@ -26,29 +24,15 @@ public class SaveBookViewModel extends ViewModel {
     private String description;
     private String category;
 
-    private final BookRepository bookRepository;
-
-    private MutableLiveData<Boolean> successWithSaving = new MutableLiveData<>();
+    private MutableLiveData<Boolean> successWithAdding = new MutableLiveData<>();
 
     @Inject
-    public SaveBookViewModel(BookRepository bookRepository) {
+    public AddBookViewModel(BookRepository bookRepository) {
         this.bookRepository = bookRepository;
     }
 
-    public LiveData<Book> getBook() {
-        return bookRepository.getBookById(this.bookId);
-    }
-
-    public LiveData<Boolean> wasSavingSuccessful() {
-        return successWithSaving;
-    }
-
-    public void setBookId(BookId bookId) {
-        this.bookId = bookId;
-    }
-
-    public boolean isCoverUrlValid(String imageUrl) {
-        return BookInputValidator.isCoverUrlValid(imageUrl);
+    public LiveData<Boolean> wasAddingSuccessful() {
+        return successWithAdding;
     }
 
     public void setImageUrl(String imageUrl) {
@@ -71,6 +55,10 @@ public class SaveBookViewModel extends ViewModel {
         this.category = category;
     }
 
+    public boolean isCoverUrlValid(String imageUrl) {
+        return BookInputValidator.isCoverUrlValid(imageUrl);
+    }
+
     public boolean isDataValid() {
         return BookInputValidator.isAuthorValid(author) &&
                 BookInputValidator.isTitleValid(title);
@@ -87,18 +75,18 @@ public class SaveBookViewModel extends ViewModel {
 
                     @Override
                     public void onComplete() {
-                        successWithSaving.postValue(true);
+                        successWithAdding.postValue(true);
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        successWithSaving.postValue(false);
+                        successWithAdding.postValue(false);
                     }
                 });
     }
 
     public Book createBook() {
-        Book book = new Book(bookId,
+        Book book = new Book(null,
                 this.title,
                 this.author,
                 Book.Category.valueOf(this.category));

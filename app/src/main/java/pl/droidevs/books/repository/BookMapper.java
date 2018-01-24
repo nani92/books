@@ -26,17 +26,12 @@ class BookMapper {
     }
 
     public static Book getBook(BookEntity entity) {
-
-        if (entity == null) {
-            return null;
-        }
-
         final Book book = new Book(
                 new BookId(String.valueOf(entity.getId())),
                 entity.getTitle(),
                 entity.getAuthor(),
                 Book.Category.valueOf(entity.getCategory()));
-        book.setDescription(entity.getDescription());
+        book.setDescription(book.getDescription());
         book.setImageUrl(entity.getImageUrl());
 
         return book;
@@ -55,9 +50,5 @@ class BookMapper {
         }
 
         return entity;
-    }
-
-    public static int getBookEntityIdFromBookId(BookId bookId) {
-        return Integer.parseInt(bookId.getId());
     }
 }

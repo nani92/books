@@ -1,10 +1,9 @@
 package pl.droidevs.books.di;
 
-import dagger.Binds;
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import pl.droidevs.books.removebook.RemoveBookDialogFragment;
-import pl.droidevs.books.savebook.SaveBookActivity;
+import pl.droidevs.books.library.BookActivity;
+import pl.droidevs.books.addbook.AddBookActivity;
 import pl.droidevs.books.library.LibraryActivity;
 import pl.droidevs.books.login.LoginActivity;
 
@@ -21,7 +20,10 @@ public abstract class BuildersModule {
     abstract LoginActivity bindLoginActivity();
 
     @ContributesAndroidInjector
-    abstract SaveBookActivity bindSaveBookActivity();
+    abstract BookActivity bindBookActivity();
+
+    @ContributesAndroidInjector
+    abstract AddBookActivity bindAddBookActivity();
 
     // Bindings for other sub-components belong here
 }

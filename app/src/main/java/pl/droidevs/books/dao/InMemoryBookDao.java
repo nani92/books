@@ -18,6 +18,7 @@ public final class InMemoryBookDao implements BookDao {
 
     private final Map<Integer, BookEntity> books = new HashMap<>();
     private final MutableLiveData<List<BookEntity>> booksLiveData = new MutableLiveData<>();
+    private final MutableLiveData<BookEntity> book = new MutableLiveData<>();
 
     public InMemoryBookDao() {
         addBook("Don Quixote", "Miguel de Cervantes", "ENTERTAINEMENT",
@@ -62,6 +63,11 @@ public final class InMemoryBookDao implements BookDao {
     }
 
     @Override
+    public LiveData<List<BookEntity>> getBookById(int bookId) {
+        return booksLiveData;
+    }
+
+    @Override
     public void addBook(@NonNull BookEntity book) {
         final int id = ID_GENERATOR.incrementAndGet();
         book.setId(id);
@@ -76,10 +82,5 @@ public final class InMemoryBookDao implements BookDao {
     @Override
     public void updateBook(@NonNull BookEntity book) {
         books.put(book.getId(), book);
-    }
-
-    @Override
-    public LiveData<BookEntity> getBookById(int bookId) {
-        return null;
     }
 }
